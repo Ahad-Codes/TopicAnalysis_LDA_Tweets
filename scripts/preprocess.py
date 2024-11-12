@@ -10,6 +10,7 @@ class Preprocess():
     def __init__(self, path):
 
         self.path = path
+        print('Working!!')
         
     # Load the stopwords from the txt file.
     def load_stopwords(self, file_path='data/stop_words_english.txt'):
