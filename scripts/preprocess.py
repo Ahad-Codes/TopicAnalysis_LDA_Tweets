@@ -94,6 +94,6 @@ class Preprocess():
             print(f"An unexpected error occurred: {e}")
 
 if __name__ == '__main__':
-    path = r'data\Covid-19 Twitter Dataset (Apr-Jun 2020).csv'
+    path = 'data/raw/Covid-19 Twitter Dataset (Aug-Sep 2020).csv'
     preprocess = Preprocess(path)
     preprocess.pipeline()
