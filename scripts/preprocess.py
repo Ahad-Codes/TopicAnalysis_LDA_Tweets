@@ -59,12 +59,14 @@ class Preprocess():
         grouped = df.groupby(df[date_column].dt.to_period('M'))
         for period, group in grouped:
             period_str = f"{period.year}_{period.month}"  # Format：2020_4
-            filename = f"data\processed\{period_str}_dataset.csv"
+            filename = rf"data\processed\{period_str}_dataset.csv"
             group = self.generate_custom_ids(group)
             group = group[['id', date_column, 'original_text']]
 
             group.to_csv(filename, index=False)
             print(f"Saved {filename}")
+
+            return filename
 
     def pipeline(self):
 
@@ -77,7 +79,7 @@ class Preprocess():
 
             # load csv file
             df = pd.read_csv(file_name, encoding='utf-8')
-            print(df.head())
+            print(f"Loaded {file_name}")
 
             if 'original_text' in df.columns and 'created_at' in df.columns:
 
@@ -86,7 +88,7 @@ class Preprocess():
                 df['original_text'] = cleaned_texts[cleaned_texts != '']
 
                 # save to the new csv file
-                self.group_by_month_and_save(df, date_column='created_at')
+                filename = self.group_by_month_and_save(df, date_column='created_at')
 
         except FileNotFoundError as e:
             print(f"Error: {e}")
