@@ -1,8 +1,9 @@
 import glob
 import os
 import pandas as pd
+import config
 
-def delete_data(path = r"data/processed/"):
+def delete_data(path = rf"{config.processed_path}/"):
 
     data_files = glob.glob(f"{path}*.csv")
     for file in data_files:
@@ -16,7 +17,7 @@ def delete_data(path = r"data/processed/"):
 
     return
 
-def group_raw_files(path = r"data/raw/"):
+def group_raw_files(path = rf"{config.raw_path}"):
 
     data_files = glob.glob(os.path.join(path, "*.csv"))
     all_df = []
@@ -30,7 +31,7 @@ def group_raw_files(path = r"data/raw/"):
     
     return pd.concat(all_df, ignore_index=True)
 
-def open_processed_files(path = r"data/processed/"):
+def open_processed_files(path = rf"{config.processed_path}/"):
 
     data_files = glob.glob(os.path.join(path, "*.csv"))
     all_df = []
