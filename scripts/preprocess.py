@@ -9,7 +9,7 @@ class Preprocess():
 
     def __init__(self, path):
 
-        self.path = path
+        self.files = glob.glob(f"{path}*.csv")
         print('Working!!')
         
     # Load the stopwords from the txt file.
@@ -57,7 +57,10 @@ class Preprocess():
     def group_by_month_and_save(self,df, date_column='created_at'):
         df[date_column] = pd.to_datetime(df[date_column], errors='coerce')
         grouped = df.groupby(df[date_column].dt.to_period('M'))
+        print(f"Grouped by month: {grouped} groups")
         for period, group in grouped:
+            print(f"Processing {period.year}-{period.month}")
+            
             period_str = f"{period.year}_{period.month}"  # Format：2020_4
             filename = rf"data\processed\{period_str}_dataset.csv"
             group = self.generate_custom_ids(group)
@@ -66,36 +69,38 @@ class Preprocess():
             group.to_csv(filename, index=False)
             print(f"Saved {filename}")
 
-            return filename
+            
 
     def pipeline(self):
 
         # Dataset file
-        file_name = self.path
+        
 
         try:
             # load stopwords
             stopwords = self.load_stopwords()
 
-            # load csv file
-            df = pd.read_csv(file_name, encoding='utf-8')
-            print(f"Loaded {file_name}")
+            for file_name in self.files:
 
-            if 'original_text' in df.columns and 'created_at' in df.columns:
+                # load csv file
+                df = pd.read_csv(file_name, encoding='utf-8')
+                print(f"Loaded {file_name}")
 
-                # process each line of text
-                cleaned_texts = df['original_text'].apply(lambda x: self.clean_text(x, stopwords))
-                df['original_text'] = cleaned_texts[cleaned_texts != '']
+                if 'original_text' in df.columns and 'created_at' in df.columns:
 
-                # save to the new csv file
-                filename = self.group_by_month_and_save(df, date_column='created_at')
+                    # process each line of text
+                    cleaned_texts = df['original_text'].apply(lambda x: self.clean_text(x, stopwords))
+                    df['original_text'] = cleaned_texts[cleaned_texts != '']
+
+                    # save to the new csv file
+                    filename = self.group_by_month_and_save(df, date_column='created_at')
 
         except FileNotFoundError as e:
             print(f"Error: {e}")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
 
-if __name__ == '__main__':
-    path = 'data/raw/Covid-19 Twitter Dataset (Aug-Sep 2020).csv'
-    preprocess = Preprocess(path)
-    preprocess.pipeline()
+# if __name__ == '__main__':
+#     path = r'data\Covid-19 Twitter Dataset (Apr-Jun 2020).csv'
+#     preprocess = Preprocess(path)
+#     preprocess.pipeline()
