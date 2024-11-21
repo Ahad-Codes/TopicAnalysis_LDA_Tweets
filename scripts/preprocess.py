@@ -10,7 +10,7 @@ class Preprocess():
     def __init__(self, path):
 
         self.files = glob.glob(f"{path}*.csv")
-        print('Working!!')
+        print('Preprocessing tweets!')
         
     # Load the stopwords from the txt file.
     def load_stopwords(self, file_path='data/stop_words_english.txt'):

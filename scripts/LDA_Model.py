@@ -14,17 +14,21 @@ from tqdm import tqdm
 english_words = set(words.words())
 
 class Model() :
-    def __init__(self, df, topics) :
+    def __init__(self, df = None, topics = None, model = None) :
         self.df = df
         self.topics = topics
+        self.lda_model = model
 
     def CreateLdaModel(self) :
       
         documents = []
+        true_words = []
         for sentence in self.df["original_text"]:
+
+
             try:
                 words = sentence.split()
-                true_words = [word for word in words if word.lower() in english_words]
+                true_words = [word for word in words if 0 == 0 ]
                 if true_words:  
                     documents.append(true_words)
                 
@@ -37,15 +41,22 @@ class Model() :
 
         
         corpus = tqdm(self.corpus, desc="Building Model", total=len(self.corpus))
-        self.lda_model = gensim.models.LdaMulticore(
-            corpus=corpus,
-            id2word=self.id2word,
-            num_topics=self.topics,
-            passes=5,
-            workers=4  
-        )
+
+        if self.lda_model is not None:
+            print("Model already exists")
+            return self.lda_model
+        else:
+            self.lda_model = gensim.models.LdaMulticore(
+                corpus=corpus,
+                id2word=self.id2word,
+                num_topics=self.topics,
+                passes=5,
+                workers=4  
+            )
 
         print("LDA model built successfully")
+
+        return self.lda_model
 
     def visualize(self) :
         LDAvis_prepared = pyLDAvis.gensim.prepare(self.lda_model, self.corpus, self.id2word)

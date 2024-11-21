@@ -6,7 +6,7 @@ import config
 import glob
 
 # Download VADER lexicon if you haven't already
-nltk.download('vader_lexicon')
+#nltk.download('vader_lexicon')
 
 # Initialize the VADER sentiment analyzer
 analyzer = SentimentIntensityAnalyzer()
