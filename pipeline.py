@@ -1,6 +1,7 @@
 from scripts.preprocess import Preprocess
 from scripts.sentiment_analysis import sentiment_analysis
 from scripts.sentiment_creation import create_sentiment
+from scripts.monthly_sentiment_analysis import monthly_sentiment_analysis
 from scripts.wordCloud import generate_wordclouds
 from utils.data_utils import delete_data, open_processed_files
 import config
@@ -58,6 +59,8 @@ def main(raw_file_path, num_topics, save_results_path):
 
     keywords = ['health', 'vaccine', 'policy', 'lockdown', 'economy', 'distancing']
     sentiment_analysis(keywords)
+
+    monthly_sentiment_analysis()
 
     delete_data()
 
